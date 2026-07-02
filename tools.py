@@ -5,9 +5,19 @@ import os
 from dotenv import load_dotenv
 from workflow.config import SEARCH_RESULTS, MAX_CONTENT_LENGTH
 
+try:
+    import streamlit as st
+except ImportError:
+    st = None
+
 load_dotenv()
 
-tavily = TavilyClient(api_key=os.getenv("TAVILY_API_KEY"))
+TAVILY_API_KEY = os.getenv("TAVILY_API_KEY")
+
+if not TAVILY_API_KEY and st is not None:
+    TAVILY_API_KEY = st.secrets["TAVILY_API_KEY"]
+
+tavily = TavilyClient(api_key=TAVILY_API_KEY)
 
 
 # ==========================================================
